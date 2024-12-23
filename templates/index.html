@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeechT5 TTS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+    <div class="tts_choices">
+        <div class="text-input">
+            <textarea id="text" rows="10" cols="50">This is SpeechT5 fine-tuned model.</textarea>
+        </div>
+
+        <div class="speaker-picker">
+            <div class="scrollable" id="speakers" tabindex="0">
+                <span id="speaker_id">0</span>
+            </div>
+        </div>
+    </div>
+    <button id="speak_button" value="submit">Speak</button>
+    <audio id="audio" controls></audio>
+
+    <script>
+        $(document).ready(function() {
+            var selectedSpeaker = '00';  // Default speaker ID
+
+            // Event handler for the Speak button click
+            $("#speak_button").on("click", function(event) {
+                event.preventDefault();
+
+                // Get the text from the textarea
+                var text = $("#text").val();
+                selectedSpeaker = parseInt($("#speaker_id").text(), 10);
+
+                // Send the text and speaker ID via AJAX to the Flask backend
+                $.ajax({
+                    url: '/submit',  // The Flask route
+                    type: 'POST',
+                    data: {
+                        text: text,
+                        speaker_id: selectedSpeaker  // Send the selected speaker ID
+                    },
+                    success: function(response) {
+                        // Assuming the response contains the audio URL
+                        var audioUrl = response.audio_url;
+
+                        // Set the audio source to the response data (audio.wav)
+                        $('#audio').attr('src', audioUrl);
+
+                        // Optionally, play the audio automatically
+                        $('#audio')[0].play();
+                    },
+                    error: function() {
+                        alert("Error submitting form.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

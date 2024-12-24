@@ -1,65 +1,86 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f5f5f5;
-  }
+    background-color: #f4f7fa;
+}
 
 .tts_choices {
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    gap: 30px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 100%;
+    justify-content: center;
 }
 
 textarea {
     width: 500px;
-    height: 100px;
-    padding: 10px;
+    height: 120px;
+    padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-size: 1em;
+    font-size: 1.2em;
     resize: vertical;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    transition: all 0.3s ease;
+}
+
+textarea:focus {
+    border-color: #007bff;
+    box-shadow: inset 0 2px 10px rgba(0, 123, 255, 0.3);
+    transform: scale(1.05);
 }
 
 .speaker-picker {
     display: flex;
     align-items: center;
-    gap: 10px;
+}
+
+.scrollable-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px;
 }
 
 .scrollable {
-    width: 60px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     overflow: hidden;
     text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scrollable:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
 }
 
 .scrollable.selected {
-    border: 2px solid #007bff;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    border: 3px solid #007bff;
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.5);
 }
 
 .scrollable span {
@@ -67,30 +88,53 @@ textarea {
     user-select: none;
 }
 
-.scrollable:before,
-.scrollable:after {
-    content: '';
-    position: absolute;
+.speaker_id {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    height: 30%;
-    top: 0;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
-    z-index: 1;
-}
-
-.scrollable:after {
-    top: auto;
-    bottom: 0;
-    background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    height: 100%;
 }
 
 #speak_button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
+    padding: 12px 30px;
+    background: linear-gradient(to right, #007bff, #00aaff);
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1em;
+    border-radius: 50px;
+    font-size: 1.2em;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+#speak_button:hover {
+    background: linear-gradient(to right, #005f9e, #0094b8);
+    transform: scale(1.05);
+}
+
+#speak_button:active {
+    transform: scale(1);
+}
+
+
+
+audio {
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (max-width: 768px) {
+    .tts_choices {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    textarea {
+        width: 90%;
+    }
+
+    #speak_button {
+        width: 100%;
+    }
 }

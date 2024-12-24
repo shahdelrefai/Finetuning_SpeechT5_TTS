@@ -14,6 +14,9 @@ login(token=api_token)
 model = SpeechT5ForTextToSpeech.from_pretrained(
     "shahdelrefai/speecht5_finetuned_voxpopuli_en"
 )
+model2 = SpeechT5ForTextToSpeech.from_pretrained(
+    "microsoft/speecht5_tts"
+)
 checkpoint = "microsoft/speecht5_tts"
 processor = SpeechT5Processor.from_pretrained(checkpoint)
 
@@ -46,10 +49,7 @@ def prepare_dataset(example):
         return_attention_mask=False,
     )
 
-    # strip off the batch dimension
     example["labels"] = example["labels"][0]
-
-    # use SpeechBrain to obtain x-vector
     example["speaker_embeddings"] = create_speaker_embedding(audio["array"])
 
     return example
@@ -65,7 +65,7 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit_text():
     speaker_id = int(request.form.get('speaker_id'))
-    example = third_item = next(x for i, x in enumerate(test_dataset) if i == speaker_id)
+    example  = next(x for i, x in enumerate(test_dataset) if i == speaker_id)
     speaker_embeddings = torch.tensor(example["speaker_embeddings"]).unsqueeze(0)
     text = request.form.get('text')
     inputs = processor(text=text, return_tensors="pt")
@@ -73,7 +73,10 @@ def submit_text():
     speech = model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
     sf.write('static/audio/audio.wav', speech.numpy(), 16000)
 
-    return jsonify({"audio_url": "static/audio/audio.wav"})
+    pretrained_speech = model2.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
+    sf.write('static/audio/audio2.wav', pretrained_speech.numpy(), 16000)
+
+    return jsonify({"audio_url": "static/audio/audio.wav", "audio2_url" : "static/audio/audio2.wav"})
 
 if __name__ == '__main__':
     app.run(debug=True)
